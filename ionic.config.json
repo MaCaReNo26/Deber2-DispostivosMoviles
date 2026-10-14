@@ -1,0 +1,7 @@
+{
+  "name": "deber2-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
