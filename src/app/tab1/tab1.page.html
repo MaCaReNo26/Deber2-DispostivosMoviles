@@ -1,17 +1,87 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
+
+<ion-header>
+  <ion-toolbar color="primary">
     <ion-title>
-      Tab 1
+      <ion-icon name="cart-outline"></ion-icon>
+      Registro de compra
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Datos del producto</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <form (ngSubmit)="registrarCompra()">
+
+        <ion-item>
+          <ion-label position="stacked">Nombre del producto</ion-label>
+          <ion-input
+            name="nombreProducto"
+            type="text"
+            placeholder="Ej. Teclado"
+            [(ngModel)]="nombreProducto"
+            required>
+          </ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Cantidad</ion-label>
+          <ion-input
+            name="cantidad"
+            type="number"
+            inputmode="numeric"
+            min="1"
+            step="1"
+            placeholder="Ej. 2"
+            [(ngModel)]="cantidad"
+            required>
+          </ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Precio unitario ($)</ion-label>
+          <ion-input
+            name="precioUnitario"
+            type="number"
+            inputmode="decimal"
+            min="0.01"
+            step="any"
+            placeholder="Ej. 15.50"
+            [(ngModel)]="precioUnitario"
+            required>
+          </ion-input>
+        </ion-item>
+
+        @if (mensajeError) {
+          <ion-text color="danger">
+            <p>{{ mensajeError }}</p>
+          </ion-text>
+        }
+
+        <ion-button
+          expand="block"
+          type="submit"
+          class="ion-margin-top">
+          Continuar al pago
+          <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
+        </ion-button>
+
+      </form>
+    </ion-card-content>
+  </ion-card>
+
+  @if (subtotal > 0) {
+    <ion-card color="light">
+      <ion-card-content>
+        Subtotal de la compra:
+        <strong>${{ formatearDinero(subtotal) }}</strong>
+      </ion-card-content>
+    </ion-card>
+  }
+
 </ion-content>

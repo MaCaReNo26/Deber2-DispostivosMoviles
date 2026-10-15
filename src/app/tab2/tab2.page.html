@@ -1,17 +1,145 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
+<ion-header>
+  <ion-toolbar color="primary">
     <ion-title>
-      Tab 2
+      <ion-icon name="calculator-outline"></ion-icon>
+      Cálculo de pago
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 2</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
 
-  <app-explore-container name="Tab 2 page"></app-explore-container>
+  @if (compra) {
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Resumen de la compra</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-item>
+        <ion-label>Producto</ion-label>
+        <ion-text>{{ compra.nombreProducto }}</ion-text>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Cantidad</ion-label>
+        <ion-text>{{ compra.cantidad }}</ion-text>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Precio unitario</ion-label>
+        <ion-text>
+          ${{ formatearDinero(compra.precioUnitario) }}
+        </ion-text>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Subtotal</ion-label>
+        <ion-text>
+          <strong>${{ formatearDinero(compra.subtotal) }}</strong>
+        </ion-text>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Calcular pago</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <form (ngSubmit)="calcularPago()">
+
+        <ion-item>
+          <ion-label position="stacked">Descuento (%)</ion-label>
+          <ion-input name="descuento" type="number" inputmode="decimal" min="0" max="100" step="any"
+            [(ngModel)]="descuento" required>
+          </ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">
+            Dinero recibido ($)
+          </ion-label>
+          <ion-input name="dineroRecibido" type="number" inputmode="decimal" min="0" step="any"
+            [(ngModel)]="dineroRecibido" required>
+          </ion-input>
+        </ion-item>
+
+        @if (mensajeError) {
+        <ion-text color="danger">
+          <p>{{ mensajeError }}</p>
+        </ion-text>
+        }
+
+        <ion-button expand="block" type="submit" class="ion-margin-top">
+          <ion-icon slot="start" name="calculator-outline">
+          </ion-icon>
+          Calcular total
+        </ion-button>
+
+      </form>
+    </ion-card-content>
+  </ion-card>
+
+  @if (pagoCalculado) {
+  <ion-card color="light">
+    <ion-card-header>
+      <ion-card-title>Resultado del pago</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-item>
+        <ion-label>Descuento aplicado</ion-label>
+        <ion-text>
+          ${{ formatearDinero(descuentoAplicado) }}
+        </ion-text>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Total final</ion-label>
+        <ion-text>
+          <strong>${{ formatearDinero(totalFinal) }}</strong>
+        </ion-text>
+      </ion-item>
+
+      @if (cambio > 0) {
+      <ion-text color="success">
+        <h2>Cambio: ${{ formatearDinero(cambio) }}</h2>
+      </ion-text>
+      } @else if (saldoPendiente > 0) {
+      <ion-text color="danger">
+        <h2>
+          Saldo pendiente: ${{ formatearDinero(saldoPendiente) }}
+        </h2>
+      </ion-text>
+      } @else {
+      <ion-text color="success">
+        <h2>Pago exacto. No hay cambio ni saldo pendiente.</h2>
+      </ion-text>
+      }
+    </ion-card-content>
+  </ion-card>
+  }
+
+  <ion-button expand="block" fill="outline" (click)="nuevaCompra()">
+    <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+    Registrar otra compra
+  </ion-button>
+
+  } @else {
+  <ion-card>
+    <ion-card-content>
+      <ion-text color="medium">
+        No hay ninguna compra registrada. Regresa a Compra
+        para ingresar los datos.
+      </ion-text>
+
+      <ion-button expand="block" (click)="nuevaCompra()">
+        Ir a Compra
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+  }
+
 </ion-content>
